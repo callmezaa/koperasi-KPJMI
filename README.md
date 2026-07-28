@@ -1,32 +1,70 @@
-# React + TypeScript + Vite
+# KPJMI — Koperasi Petani Jaya Makmur Indonesia
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Corporate website for **KPJMI (Koperasi Petani Jaya Makmur Indonesia)**, a cooperative empowering local farmers in Banyumas, Central Java through organic papaya cultivation and processed products.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework:** React 19 + TypeScript
+- **Build:** Vite 8
+- **Styling:** Tailwind CSS v4
+- **Animation:** Motion (framer-motion)
+- **Carousel:** Embla Carousel
+- **Icons:** Lucide React
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Editorial Hero** — Full-bleed background with scroll-aware overlay
+- **Premium Navbar** — Fixed top, transparent-to-glass transition, active section tracking, CTA button
+- **About Section** — Editorial magazine-spread layout with organic image mask, floating glass quote card, feature list, statistics, story card
+- **Vision & Mission** — Centered glass vision card, zigzag timeline mission cards, commitment banner on image background
+- **Production & Distribution** — Rich detail cards with per-item breakdown
+- **Products** — Real product photography showcase for Papaya Candy, Chips, and Soap
+- **Gallery** — Documentation photos with lightbox modal
+- **Testimonials** — Embla carousel with premium cards and dot navigation
+- **FAQ** — Smooth accordion with AnimatePresence
+- **Contact** — Live Google Maps embed, WhatsApp integration
+- **Footer** — Dark footer with brand SVG social icons
 
-## Expanding the Oxlint configuration
+## Getting Started
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Build for production:
+
+```bash
+npm run build
+```
+
+Preview production build:
+
+```bash
+npm run preview
+```
+
+## Project Structure
+
+```
+src/
+├── assets/           # Images and static assets
+│   └── dokumentasi/  # Gallery documentation photos
+├── components/
+│   ├── layout/       # Navbar, Footer, Container
+│   └── sections/     # Hero, About, VisionMission, Products, Gallery, etc.
+├── data/             # Content data files
+├── styles/           # Global CSS (Tailwind v4)
+├── types/            # TypeScript interfaces
+└── utils/            # Helper utilities (cn)
+```
+
+## Design
+
+- **Colors:** Brand red (#B81104), warm whites, subtle grays
+- **Typography:** Satoshi (display/headings), Outfit (body/mono)
+- **Philosophy:** Editorial, minimal, premium — inspired by Apple, Stripe, and Swiss editorial design
+
+## License
+
+All rights reserved. KPJMI — Koperasi Petani Jaya Makmur Indonesia.
