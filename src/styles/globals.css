@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-red: #B81104;
+  --color-brand-lemon: #FFFACD;
+  --font-family-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: "Outfit", ui-monospace, monospace;
+  --font-family-display: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
