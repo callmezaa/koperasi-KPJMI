@@ -91,15 +91,15 @@ export function BusinessUnits() {
           {items.map((item, i) => (
             <motion.div
               key={item.number}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 24, scale: 0.92 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
               transition={{
-                duration: 0.5,
+                duration: 0.55,
                 delay: i * 0.12,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="group relative rounded-3xl border border-[#E5E7EB] bg-white p-7 shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-brand-red/20 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] sm:p-8"
+              className="group relative rounded-3xl border border-[#E5E7EB] bg-white p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_1px_4px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-1 hover:border-brand-red/20 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_8px_24px_rgba(0,0,0,0.06)] sm:p-8"
             >
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F9FAFB] text-[#9CA3AF] transition-colors duration-300 group-hover:bg-brand-red/10 group-hover:text-brand-red">

@@ -85,7 +85,7 @@ export function Contact() {
                 href={contact.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-1 items-center justify-center gap-2.5 rounded-xl border border-[#E5E7EB] bg-white px-6 py-3.5 text-sm font-medium text-[#111827] shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-red/30 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] active:scale-[0.97]"
+                className="btn-ripple flex flex-1 items-center justify-center gap-2.5 rounded-xl border border-[#E5E7EB] bg-white px-6 py-3.5 text-sm font-medium text-[#111827] shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-red/30 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] active:scale-[0.97]"
               >
                 <Map className="h-4 w-4 text-brand-red" />
                 Google Maps
@@ -94,7 +94,7 @@ export function Contact() {
                 href={`https://wa.me/${contact.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-1 items-center justify-center gap-2.5 rounded-xl bg-brand-red px-6 py-3.5 text-sm font-medium text-white shadow-lg shadow-brand-red/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-red/30 active:scale-[0.97]"
+                className="btn-ripple flex flex-1 items-center justify-center gap-2.5 rounded-xl bg-brand-red px-6 py-3.5 text-sm font-medium text-white shadow-lg shadow-brand-red/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-red/30 active:scale-[0.97]"
               >
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp

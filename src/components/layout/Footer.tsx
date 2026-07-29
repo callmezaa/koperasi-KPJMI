@@ -3,6 +3,7 @@ import { Container } from "./Container";
 import { company } from "../../data/company";
 import { contact } from "../../data/contact";
 import logoSrc from "../../assets/logo_kpjmi.png";
+import logoSrcWebp from "../../assets/logo_kpjmi.webp";
 
 const quickLinks = [
   { label: "Beranda", href: "#hero" },
@@ -61,7 +62,10 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-4">
           <div>
             <div className="flex items-center gap-3">
-              <img src={logoSrc} alt="KPJMI" className="h-10 w-auto" />
+                <picture>
+                  <source srcSet={logoSrcWebp} type="image/webp" />
+                  <img src={logoSrc} alt="KPJMI" className="h-10 w-auto" />
+                </picture>
               <span className="font-display text-xl font-bold text-white">
                 {company.name}
               </span>
@@ -118,7 +122,7 @@ export function Footer() {
                 <a
                   key={s.name}
                   href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#333] text-[#9CA3AF] transition-all duration-200 hover:border-brand-red hover:bg-brand-red hover:text-white hover:-translate-y-0.5"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#333] text-[#9CA3AF] transition-all duration-200 hover:border-brand-red hover:bg-brand-red hover:text-white hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(184,17,4,0.35)]"
                   aria-label={s.name}
                 >
                   {s.icon}

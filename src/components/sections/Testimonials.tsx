@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Container } from "../layout/Container";
 import { testimonials } from "../../data/testimonials";
@@ -13,17 +14,50 @@ const avatarGradients = [
 ];
 
 export function Testimonials() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const [progress, setProgress] = useState(0);
+  const progressStartRef = useRef(Date.now());
+  const rafRef = useRef<number>(0);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start" },
+    [
+      Autoplay({
+        delay: 4000,
+        stopOnInteraction: false,
+        stopOnMouseEnter: true,
+      }),
+    ],
+  );
+
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const autoplayRef = useRef(emblaApi?.plugins()?.autoplay);
+
+  useEffect(() => {
+    autoplayRef.current = emblaApi?.plugins()?.autoplay;
+  }, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
-    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    const reset = () => { progressStartRef.current = Date.now(); setProgress(0); };
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+      reset();
+    };
     emblaApi.on("select", onSelect);
     onSelect();
-    return () => {
-      emblaApi.off("select", onSelect);
+    return () => { emblaApi.off("select", onSelect); };
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const tick = () => {
+      if (autoplayRef.current?.isPlaying()) {
+        setProgress(Math.min((Date.now() - progressStartRef.current) / 4000, 1));
+      }
+      rafRef.current = requestAnimationFrame(tick);
     };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
   }, [emblaApi]);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
@@ -96,13 +130,20 @@ export function Testimonials() {
               key={i}
               onClick={() => emblaApi?.scrollTo(i)}
               className={cn(
-                "rounded-full transition-all duration-300",
+                "relative overflow-hidden rounded-full transition-all duration-300",
                 i === selectedIndex
-                  ? "h-2.5 w-8 bg-brand-red"
+                  ? "h-2.5 w-8 bg-[#E5E7EB]"
                   : "h-2.5 w-2.5 bg-[#D4D4D4] hover:bg-[#A3A3A3]"
               )}
               aria-label={`Slide ${i + 1}`}
-            />
+            >
+              {i === selectedIndex && (
+                <span
+                  className="absolute inset-0 rounded-full bg-brand-red"
+                  style={{ width: `${progress * 100}%` }}
+                />
+              )}
+            </button>
           ))}
         </div>
       </Container>

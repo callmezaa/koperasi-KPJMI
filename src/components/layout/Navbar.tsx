@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { navItems } from "../../data/navigation";
 import logoSrc from "../../assets/logo_kpjmi.png";
+import logoSrcWebp from "../../assets/logo_kpjmi.webp";
 
 const sectionIds = navItems.map((item) => item.id);
 
@@ -36,11 +37,18 @@ function useActiveSection(ids: string[]) {
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const activeSection = useActiveSection(sectionIds);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      setScrolled(currentY > 50);
+      setHidden(currentY > 120 && currentY > lastY);
+      lastY = currentY;
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -52,9 +60,11 @@ export function Navbar() {
   };
 
   return (
-    <header
+    <motion.header
+      animate={{ y: hidden ? -80 : 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+        "fixed top-0 left-0 right-0 z-50",
         scrolled
           ? "bg-white/80 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.08)]"
           : "bg-transparent"
@@ -65,7 +75,10 @@ export function Navbar() {
           onClick={() => scrollTo("hero")}
           className="flex items-center gap-2.5 shrink-0 active:scale-[0.96] transition-transform duration-150"
         >
-          <img src={logoSrc} alt="KPJMI" className="h-9 w-auto" />
+          <picture>
+            <source srcSet={logoSrcWebp} type="image/webp" />
+            <img src={logoSrc} alt="KPJMI" className="h-9 w-auto" />
+          </picture>
           <span className={cn("text-base font-bold transition-colors duration-300", scrolled ? "text-brand-red" : "text-white")}>KPJMI</span>
         </button>
 
@@ -91,7 +104,7 @@ export function Navbar() {
               <span
                 className={cn(
                   "absolute bottom-0 left-3 right-3 h-[2px] bg-brand-red",
-                  "origin-left transition-transform duration-300 ease-out",
+                  "origin-left transition-transform duration-[400ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]",
                   activeSection === item.id
                     ? "scale-x-100"
                     : "scale-x-0 group-hover:scale-x-100"
@@ -103,7 +116,7 @@ export function Navbar() {
 
         <button
           onClick={() => scrollTo("contact")}
-          className="hidden md:inline-flex items-center gap-2 rounded-full bg-brand-red px-5 py-2 text-sm font-medium text-white shadow-lg shadow-brand-red/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-red/30 active:scale-[0.97]"
+          className="btn-ripple hidden md:inline-flex items-center gap-2 rounded-full bg-brand-red px-5 py-2 text-sm font-medium text-white shadow-lg shadow-brand-red/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-red/30 active:scale-[0.97]"
         >
           Gabung Sekarang
         </button>
@@ -159,7 +172,7 @@ export function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => scrollTo("contact")}
-                className="mt-4 w-full rounded-full bg-brand-red px-5 py-3 text-sm font-medium text-white shadow-lg shadow-brand-red/20 transition-all duration-300 active:scale-[0.97]"
+                className="btn-ripple mt-4 w-full rounded-full bg-brand-red px-5 py-3 text-sm font-medium text-white shadow-lg shadow-brand-red/20 transition-all duration-300 active:scale-[0.97]"
               >
                 Gabung Sekarang
               </motion.button>
@@ -167,6 +180,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }

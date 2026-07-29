@@ -1,4 +1,5 @@
-import { motion } from "motion/react";
+import { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, useInView, useReducedMotion } from "motion/react";
 import {
   Users,
   BarChart3,
@@ -12,10 +13,62 @@ import {
 import { Container } from "../layout/Container";
 import { company, aboutFeatures, aboutStats, aboutStory } from "../../data/company";
 import aboutImg from "../../assets/tentangkami_section.jpg";
+import aboutImgWebp from "../../assets/tentangkami_section.webp";
+
+function parseStatValue(value: string): { num: number; suffix: string } {
+  const match = value.match(/^([\d.]+)(.*)$/);
+  if (!match) return { num: 0, suffix: value };
+  const num = parseInt(match[1].replace(/\./g, ""));
+  return { num, suffix: match[2] };
+}
+
+function formatStat(num: number): string {
+  return num.toLocaleString("id-ID");
+}
+
+function StatCounter({ value, duration = 1.8 }: { value: string; duration?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true });
+  const [display, setDisplay] = useState(0);
+  const { num, suffix } = parseStatValue(value);
+
+  useEffect(() => {
+    if (!inView) return;
+    let startTime: number | null = null;
+    let frame: number;
+
+    const animate = (time: number) => {
+      if (!startTime) startTime = time;
+      const elapsed = (time - startTime) / 1000;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.floor(eased * num));
+      if (progress < 1) frame = requestAnimationFrame(animate);
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [inView, num, duration]);
+
+  return <div ref={ref}>{formatStat(display)}{suffix}</div>;
+}
 
 export function About() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const imageY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-6%", "6%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "3%"]);
+
   return (
-    <section id="about" className="relative overflow-hidden bg-[#FAF9F6] py-20 lg:py-28">
+    <section
+      id="about"
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#FAF9F6] py-20 lg:py-28"
+    >
       {/* Background Subtle Leaf Watermark */}
       <div className="pointer-events-none absolute left-0 top-1/4 z-0 opacity-15">
         <svg
@@ -32,36 +85,25 @@ export function About() {
             strokeWidth="1.5"
             strokeDasharray="4 4"
           />
-          <path
-            d="M120 240C180 280 220 340 240 420"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
-          <path
-            d="M160 210C190 230 210 260 220 300"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
-          <path
-            d="M80 320C120 340 150 370 170 420"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
+          <path d="M120 240C180 280 220 340 240 420" stroke="currentColor" strokeWidth="1" />
+          <path d="M160 210C190 230 210 260 220 300" stroke="currentColor" strokeWidth="1" />
+          <path d="M80 320C120 340 150 370 170 420" stroke="currentColor" strokeWidth="1" />
         </svg>
       </div>
 
       <Container className="relative z-10">
-        {/* TOP MAIN SECTION GRID */}
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
           {/* Left Column: Heading & Features */}
-          <div className="lg:col-span-5 flex flex-col justify-center">
+          <motion.div
+            style={{ y: textY }}
+            className="lg:col-span-5 flex flex-col justify-center will-change-transform"
+          >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              {/* Badge label with red line */}
               <div className="flex items-center gap-3">
                 <span className="text-xs sm:text-[13px] font-bold uppercase tracking-[0.2em] text-[#C1121F]">
                   TENTANG KAMI
@@ -69,20 +111,17 @@ export function About() {
                 <span className="h-[2px] w-10 bg-[#C1121F]/50 rounded-full" />
               </div>
 
-              {/* Main Editorial Heading */}
               <h2 className="mt-4 font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.18] tracking-tight text-[#111827]">
                 Bersama Petani,
                 <br />
                 <span className="text-[#C1121F]">Kita Membangun Negeri.</span>
               </h2>
 
-              {/* Paragraph Description */}
               <p className="mt-5 text-sm sm:text-base leading-relaxed text-[#4B5563] max-w-[50ch]">
                 {company.description}
               </p>
             </motion.div>
 
-            {/* 3 Key Feature Items */}
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -98,15 +137,15 @@ export function About() {
                   item.icon === "users"
                     ? Users
                     : item.icon === "barchart"
-                    ? BarChart3
-                    : Leaf;
+                      ? BarChart3
+                      : Leaf;
 
                 return (
                   <motion.div
                     key={item.title}
                     variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      visible: { opacity: 1, x: 0 },
+                      hidden: { opacity: 0, x: -20, scale: 0.95, rotate: -1 },
+                      visible: { opacity: 1, x: 0, scale: 1, rotate: 0 },
                     }}
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="flex items-start gap-4 group"
@@ -115,9 +154,7 @@ export function About() {
                       <IconComponent className="h-5 w-5 stroke-[2.2]" />
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-[#111827]">
-                        {item.title}
-                      </h3>
+                      <h3 className="text-base font-bold text-[#111827]">{item.title}</h3>
                       <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[#6B7280] max-w-[42ch]">
                         {item.desc}
                       </p>
@@ -126,10 +163,13 @@ export function About() {
                 );
               })}
             </motion.div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Hero Image with Organic Curved Shape & Floating Quote Card */}
-          <div className="lg:col-span-7 relative">
+          <motion.div
+            style={{ y: imageY }}
+            className="lg:col-span-7 relative will-change-transform"
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -137,7 +177,6 @@ export function About() {
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="relative w-full overflow-hidden rounded-[32px] sm:rounded-[40px] shadow-2xl bg-white"
             >
-              {/* Organic Mask SVG definition for image clip */}
               <svg className="absolute w-0 h-0" aria-hidden="true">
                 <defs>
                   <clipPath id="organic-about-clip" clipPathUnits="objectBoundingBox">
@@ -146,22 +185,19 @@ export function About() {
                 </defs>
               </svg>
 
-              {/* Main Photo with smooth curved container styling matching design image */}
               <div className="relative min-h-[380px] sm:min-h-[480px] lg:min-h-[520px] w-full">
-                <img
-                  src={aboutImg}
-                  alt="Kegiatan Bimbingan Teknis Koperasi KPJMI bersama Petani"
-                  className="absolute inset-0 h-full w-full object-cover object-center"
-                  style={{
-                    clipPath: "url(#organic-about-clip)",
-                  }}
-                />
-                
-                {/* Fallback frame background color in unclipped area */}
+                <picture className="absolute inset-0 h-full w-full">
+                  <source srcSet={aboutImgWebp} type="image/webp" />
+                  <img
+                    src={aboutImg}
+                    alt="Kegiatan Bimbingan Teknis Koperasi KPJMI bersama Petani"
+                    className="h-full w-full object-cover object-center"
+                    style={{ clipPath: "url(#organic-about-clip)" }}
+                  />
+                </picture>
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-transparent pointer-events-none" />
               </div>
 
-              {/* Floating Quote Glass Card (Top Right over Image) */}
               <motion.div
                 initial={{ opacity: 0, y: -20, x: 20 }}
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
@@ -171,7 +207,7 @@ export function About() {
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-serif text-3xl font-bold leading-none text-[#C1121F]">
-                    “
+                    &ldquo;
                   </span>
                   <Quote className="h-4 w-4 text-[#C1121F]/40" />
                 </div>
@@ -179,11 +215,11 @@ export function About() {
                   {company.philosophy}
                 </p>
                 <div className="mt-3 text-[11px] font-bold tracking-wider text-[#C1121F]">
-                  — KPJMI
+                  &mdash; KPJMI
                 </div>
               </motion.div>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
 
         {/* BOTTOM SECTION: STATISTICS & STORY CARD */}
@@ -194,7 +230,6 @@ export function About() {
           transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="mt-12 sm:mt-16 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch"
         >
-          {/* Left Box: 4 Key Statistics Grid */}
           <div className="lg:col-span-7 rounded-[28px] bg-white p-6 sm:p-8 shadow-[0_4px_25px_rgba(0,0,0,0.03)] border border-[#E5E7EB]/80 flex flex-col justify-center">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
               {aboutStats.map((stat, idx) => {
@@ -202,10 +237,10 @@ export function About() {
                   stat.icon === "calendar"
                     ? CalendarDays
                     : stat.icon === "users"
-                    ? Users
-                    : stat.icon === "handshake"
-                    ? Handshake
-                    : MapPin;
+                      ? Users
+                      : stat.icon === "handshake"
+                        ? Handshake
+                        : MapPin;
 
                 return (
                   <div
@@ -217,8 +252,8 @@ export function About() {
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FDF0F0] text-[#C1121F] mb-3">
                       <StatIcon className="h-5 w-5" />
                     </div>
-                    <div className="font-display text-2xl sm:text-3xl font-extrabold text-[#C1121F]">
-                      {stat.value}
+                    <div className="font-display text-2xl sm:text-3xl font-extrabold text-[#C1121F] tabular-nums">
+                      <StatCounter value={stat.value} />
                     </div>
                     <div className="mt-1 text-xs sm:text-sm font-medium text-[#6B7280]">
                       {stat.label}
@@ -229,7 +264,6 @@ export function About() {
             </div>
           </div>
 
-          {/* Right Box: Story Card (Kolaborasi untuk Kemajuan) */}
           <div className="lg:col-span-5 rounded-[28px] bg-white p-6 sm:p-8 shadow-[0_4px_25px_rgba(0,0,0,0.03)] border border-[#E5E7EB]/80 flex items-start gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#C1121F]/20 bg-[#FDF0F0]/50 text-[#C1121F]">
               <UserCheck className="h-6 w-6 stroke-[2]" />
@@ -246,9 +280,7 @@ export function About() {
         </motion.div>
       </Container>
 
-      {/* Gradient transition to next section */}
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-white pointer-events-none" />
     </section>
   );
 }
-

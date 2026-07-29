@@ -7,41 +7,41 @@ export const faqData: FAQItem[] = [
   {
     question: "Apa itu KPJMI?",
     answer:
-      "KPJMI (Koperasi Pegawai Jaya Mandiri Indonesia) adalah koperasi yang bergerak di bidang simpan pinjam dan layanan keuangan lainnya untuk anggota. Kami berkomitmen meningkatkan kesejahteraan anggota melalui layanan koperasi yang profesional, transparan, dan terpercaya.",
+      "KPJMI (Koperasi Petani Jaya Makmur Indonesia) adalah koperasi pertanian yang berfokus pada budidaya dan pengolahan produk pepaya organik. Berdiri di Desa Kramat, Kembaran, Banyumas, kami menghimpun petani lokal untuk bersama-sama mengembangkan pertanian berkelanjutan dan meningkatkan nilai hasil bumi melalui produk olahan berkualitas tinggi.",
   },
   {
-    question: "Siapa saja yang bisa menjadi anggota KPJMI?",
+    question: "Apa saja produk unggulan KPJMI?",
     answer:
-      "Keanggotaan KPJMI terbuka bagi pegawai di lingkungan instansi mitra yang telah bekerja sama dengan kami. Calon anggota harus memenuhi persyaratan administratif dan menyetor simpanan pokok serta simpanan wajib sesuai ketentuan yang berlaku.",
+      "Produk unggulan KPJMI meliputi olahan pepaya organik seperti Papaya Candy, Papaya Chips (Opak & Churros), dan Papaya Soap. Kami juga mengembangkan Palm Sugar (gula aren organik), Forest Honey (madu hutan asli Banyumas), serta Herbal Tea dari rempah-rempah alami. Seluruh produk diproses secara higienis tanpa bahan pengawet.",
   },
   {
-    question: "Apa saja layanan yang tersedia di KPJMI?",
+    question: "Siapa saja yang bisa bergabung menjadi anggota?",
     answer:
-      "KPJMI menyediakan berbagai layanan, antara lain: Simpanan Pokok, Simpanan Wajib, Simpanan Sukarela, Pinjaman Anggota (multiguna, pendidikan, kesehatan), dan pembagian Sisa Hasil Usaha (SHU) setiap tahun.",
+      "Keanggotaan KPJMI terbuka bagi petani di wilayah Banyumas dan sekitarnya yang ingin mengembangkan usaha pertanian secara bersama-sama. Kami menyambut petani pepaya, aren, dan komoditas organik lainnya untuk bergabung dan mendapatkan akses pendampingan teknis, sarana produksi, serta pemasaran hasil panen.",
   },
   {
-    question: "Bagaimana cara mengajukan pinjaman?",
+    question: "Bagaimana cara bergabung menjadi anggota KPJMI?",
     answer:
-      "Anggota dapat mengajukan pinjaman dengan mengisi formulir permohonan yang tersedia di kantor KPJMI atau melalui petugas kami. Persyaratan meliputi fotokopi KTP, kartu anggota, slip gaji, dan surat rekomendasi dari unit kerja. Proses pencairan biasanya memakan waktu 3-7 hari kerja setelah berkas dinyatakan lengkap.",
+      "Calon anggota dapat mendaftar dengan mengunjungi sekretariat KPJMI di Desa Kramat, Kembaran, Banyumas. Persyaratan meliputi fotokopi KTP, Kartu Keluarga, dan surat keterangan dari kepala desa. Setelah memenuhi simpanan pokok dan simpanan wajib, petani resmi menjadi anggota dan dapat mengikuti program-program pemberdayaan koperasi.",
   },
   {
-    question: "Berapa besar bunga pinjaman di KPJMI?",
+    question: "Di mana lokasi KPJMI?",
     answer:
-      "Suku bunga pinjaman di KPJMI ditetapkan berdasarkan Rapat Anggota Tahunan (RAT) dan bersifat kompetitif. Bunga pinjaman kami umumnya lebih rendah dibandingkan lembaga keuangan konvensional karena berlandaskan prinsip gotong royong dan kekeluargaan.",
+      "Kantor dan lokasi produksi KPJMI berada di Desa Kramat, Kecamatan Kembaran, Kabupaten Banyumas, Jawa Tengah. Proses budidaya pepaya organik dan produksi olahan dilakukan langsung oleh petani anggota di area sekitar dengan pengawasan quality control yang ketat.",
   },
   {
-    question: "Kapan dan bagaimana SHU dibagikan?",
+    question: "Apakah produk KPJMI memiliki izin edar?",
     answer:
-      "Sisa Hasil Usaha (SHU) dibagikan setiap tahun setelah Rapat Anggota Tahunan (RAT). Pembagian SHU didasarkan pada partisipasi dan transaksi anggota selama tahun buku berjalan. SHU dapat diambil langsung di kantor atau ditambahkan ke simpanan anggota.",
+      "Ya, seluruh produk olahan KPJMI diproduksi dengan standar higienis dan telah memiliki izin edar dari instansi terkait. Kami menerapkan sistem produksi yang baik (GMP) dan secara berkala menjalani pengawasan mutu untuk memastikan produk aman dan berkualitas bagi konsumen.",
   },
   {
-    question: "Apakah simpanan di KPJMI dijamin?",
+    question: "Bagaimana cara membeli produk KPJMI?",
     answer:
-      "Ya, simpanan anggota di KPJMI dikelola secara profesional dan transparan dengan sistem pengawasan internal yang ketat. Koperasi kami telah terdaftar dan diawasi oleh Dinas Koperasi dan UKM setempat untuk memastikan kepatuhan terhadap peraturan yang berlaku.",
+      "Produk KPJMI dapat dibeli melalui jaringan reseller dan distributor di wilayah Jawa Tengah, serta melalui pusat oleh-oleh di Banyumas Raya. Untuk pemesanan partai besar atau kerja sama distribusi, Anda dapat menghubungi kami melalui kontak WhatsApp yang tersedia di halaman Kontak.",
   },
   {
-    question: "Bagaimana cara menghubungi KPJMI?",
+    question: "Apa program pemberdayaan yang dilakukan KPJMI?",
     answer:
-      "Anda dapat menghubungi KPJMI melalui telepon di +62 31 1234 5678, email info@kpjmi.coop, atau datang langsung ke kantor kami di Jl. Pertanian Raya No. 123, Surabaya pada hari kerja pukul 08.00 - 16.00 WIB.",
+      "KPJMI secara rutin mengadakan bimbingan teknis budidaya pepaya organik, pelatihan pengolahan hasil tani, dan pendampingan akses pasar bagi anggota. Kami juga menjalin kemitraan dengan berbagai pihak untuk memperluas jangkauan pemasaran dan meningkatkan kapasitas produksi petani lokal secara berkelanjutan.",
   },
 ];

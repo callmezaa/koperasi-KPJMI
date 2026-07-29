@@ -14,6 +14,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import bgImg from "../../assets/bg1.png";
+import bgImgWebp from "../../assets/bg1.webp";
 
 const missionIcons = {
   sprout: Sprout,
@@ -110,7 +111,7 @@ export function VisionMission() {
           {/* Soft gradient background glow */}
           <div className="pointer-events-none absolute -inset-4 rounded-[40px] bg-gradient-to-br from-[#C1121F]/[0.04] via-transparent to-[#C1121F]/[0.02] blur-xl" />
 
-          <div className="relative rounded-[28px] border border-[#E5E7EB]/70 bg-white/80 px-8 py-10 text-center shadow-[0_8px_40px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:px-12 sm:py-12">
+            <div className="relative rounded-[28px] border border-[#E5E7EB]/70 bg-white/80 px-8 py-10 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_8px_40px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:px-12 sm:py-12">
             {/* Quote mark */}
             <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#FDF0F0]">
               <Quote className="h-5 w-5 text-[#C1121F]" />
@@ -168,8 +169,9 @@ export function VisionMission() {
                     initial={{
                       opacity: 0,
                       x: isEven ? -40 : 40,
+                      rotate: isEven ? -1.5 : 1.5,
                     }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    whileInView={{ opacity: 1, x: 0, rotate: 0 }}
                     viewport={{ once: true }}
                     transition={{
                       duration: 0.55,
@@ -192,7 +194,7 @@ export function VisionMission() {
                     />
 
                     {/* Card */}
-                    <div className="group w-full rounded-[22px] border border-[#E5E7EB]/70 bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(0,0,0,0.07)]">
+                    <div className="group w-full rounded-[22px] border border-[#E5E7EB]/70 bg-white p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_2px_16px_rgba(0,0,0,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_8px_30px_rgba(0,0,0,0.07)]">
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1">
                           {/* Number badge */}
@@ -234,11 +236,14 @@ export function VisionMission() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="relative mx-auto mt-16 max-w-5xl overflow-hidden rounded-[32px] shadow-[0_4px_30px_rgba(0,0,0,0.06)]"
         >
-          <img
-            src={bgImg}
-            alt="Lahan pertanian Indonesia"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          <picture className="absolute inset-0 h-full w-full">
+            <source srcSet={bgImgWebp} type="image/webp" />
+            <img
+              src={bgImg}
+              alt="Lahan pertanian Indonesia"
+              className="h-full w-full object-cover"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/50" />
 
           <div className="relative z-10 flex flex-col items-stretch gap-6 px-6 py-10 sm:flex-row sm:items-center sm:px-10 sm:py-12 lg:px-14 lg:py-14">
