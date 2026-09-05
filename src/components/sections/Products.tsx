@@ -1,30 +1,11 @@
 import { motion } from "motion/react";
 import { Container } from "../layout/Container";
 import { ResponsiveImage } from "../ui/ResponsiveImage";
-
-import candyPng from "../../assets/papaya candy.png";
-import candyWebp from "../../assets/papaya candy.webp";
-import chipPng from "../../assets/papaya chip.png";
-import chipWebp from "../../assets/papaya chip.webp";
-import soapPng from "../../assets/papay soap.png";
-import soapWebp from "../../assets/papay soap.webp";
-import palmPng from "../../assets/palm sugar.png";
-import palmWebp from "../../assets/palm sugar.webp";
-import honeyPng from "../../assets/forest honey.png";
-import honeyWebp from "../../assets/forest honey.webp";
-import teaPng from "../../assets/herbal tea.png";
-import teaWebp from "../../assets/herbal tea.webp";
-
-const products = [
-  { name: "Papaya Candy", description: "Permen pepaya organik dengan rasa alami buah pepaya pilihan dari kebun sendiri.", image: candyPng, imageWebp: candyWebp },
-  { name: "Papaya Chips", description: "Opak dan churros pepaya renyah dari pepaya organik segar, camilan sehat tanpa pengawet.", image: chipPng, imageWebp: chipWebp },
-  { name: "Papaya Soap", description: "Sabun pepaya organik kaya vitamin untuk perawatan kulit alami.", image: soapPng, imageWebp: soapWebp },
-  { name: "Palm Sugar", description: "Gula aren organik dari nira pohon aren pilihan, diolah secara tradisional oleh petani lokal Banyumas.", image: palmPng, imageWebp: palmWebp },
-  { name: "Forest Honey", description: "Madu hutan asli dari kawasan Banyumas, kaya manfaat dan dipanen secara berkelanjutan.", image: honeyPng, imageWebp: honeyWebp },
-  { name: "Herbal Tea", description: "Teh herbal dari rempah-rempah alami, diproduksi dengan proses organik tanpa bahan pengawet.", image: teaPng, imageWebp: teaWebp },
-];
+import { useContent } from "../../content/provider";
 
 export function Products() {
+  const { products } = useContent();
+
   return (
     <section id="products" className="bg-white py-24 sm:py-32">
       <Container>
@@ -49,7 +30,7 @@ export function Products() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {products.map((product, i) => (
             <motion.div
-              key={product.name}
+              key={product.id}
               initial={{ opacity: 0, y: 24, scale: 0.92 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
@@ -62,8 +43,8 @@ export function Products() {
             >
               <div className="relative aspect-[4/3] overflow-hidden rounded-t-3xl bg-[#F9FAFB]">
                 <ResponsiveImage
-                  src={product.image}
-                  srcWebp={product.imageWebp}
+                  src={product.image.src}
+                  srcWebp={product.image.srcWebp}
                   alt={product.name}
                   className="h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
                 />

@@ -1,34 +1,17 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ZoomIn, X } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { Container } from "../layout/Container";
 import { ResponsiveImage } from "../ui/ResponsiveImage";
-
-const pngImages = import.meta.glob<{ default: string }>("/src/assets/dokumentasi/*.png", {
-  eager: true,
-});
-
-const webpImages = import.meta.glob<{ default: string }>("/src/assets/dokumentasi/*.webp", {
-  eager: true,
-});
-
-const toWebp = (pngPath: string) => pngPath.replace(/\.png$/, ".webp");
-
-const gallery = [
-  { src: pngImages["/src/assets/dokumentasi/rapat_tahunan1.png"]?.default, srcWebp: webpImages[toWebp("/src/assets/dokumentasi/rapat_tahunan1.png")]?.default, alt: "Rapat Tahunan KPJMI", category: "Acara" },
-  { src: pngImages["/src/assets/dokumentasi/rapat_tahunan2.png"]?.default, srcWebp: webpImages[toWebp("/src/assets/dokumentasi/rapat_tahunan2.png")]?.default, alt: "Suasana Rapat Tahunan", category: "Acara" },
-  { src: pngImages["/src/assets/dokumentasi/rapat_tahunan3.png"]?.default, srcWebp: webpImages[toWebp("/src/assets/dokumentasi/rapat_tahunan3.png")]?.default, alt: "Diskusi Rapat Tahunan", category: "Acara" },
-  { src: pngImages["/src/assets/dokumentasi/sosialisasi1.png"]?.default, srcWebp: webpImages[toWebp("/src/assets/dokumentasi/sosialisasi1.png")]?.default, alt: "Sosialisasi Program", category: "Kegiatan" },
-  { src: pngImages["/src/assets/dokumentasi/sosialisasi2.png"]?.default, srcWebp: webpImages[toWebp("/src/assets/dokumentasi/sosialisasi2.png")]?.default, alt: "Sosialisasi Bersama Anggota", category: "Kegiatan" },
-  { src: pngImages["/src/assets/dokumentasi/bazar1.png"]?.default, srcWebp: webpImages[toWebp("/src/assets/dokumentasi/bazar1.png")]?.default, alt: "Bazar Produk Unggulan", category: "Kegiatan" },
-  { src: pngImages["/src/assets/dokumentasi/baktisosial.png"]?.default, srcWebp: webpImages[toWebp("/src/assets/dokumentasi/baktisosial.png")]?.default, alt: "Bakti Sosial KPJMI", category: "Kegiatan" },
-  { src: pngImages["/src/assets/dokumentasi/ceremony.png"]?.default, srcWebp: webpImages[toWebp("/src/assets/dokumentasi/ceremony.png")]?.default, alt: "Acara Seremoni KPJMI", category: "Acara" },
-];
-
-const categories = ["Semua", "Acara", "Kegiatan"];
+import { useContent } from "../../content/provider";
 
 export function Gallery() {
+  const { gallery } = useContent();
+  const categories = useMemo(
+    () => ["Semua", ...Array.from(new Set(gallery.map((item) => item.category)))],
+    [gallery],
+  );
   const [filter, setFilter] = useState("Semua");
   const [selected, setSelected] = useState<number | null>(null);
   const [scale, setScale] = useState(1);
@@ -117,7 +100,7 @@ export function Gallery() {
           <div key={filter} className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {filtered.map((item, i) => (
               <motion.div
-                key={item.alt}
+                key={item.id}
                 layout
                 initial={{ opacity: 0, y: 24, scale: 0.94 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -132,9 +115,9 @@ export function Gallery() {
             >
               <div className="aspect-[4/3] overflow-hidden">
                 <ResponsiveImage
-                  src={item.src}
-                  srcWebp={item.srcWebp}
-                  alt={item.alt}
+                  src={item.image.src}
+                  srcWebp={item.image.srcWebp}
+                  alt={item.title}
                   wrapperClassName="h-full w-full"
                   className="h-full w-full object-cover transition-all duration-500 group-hover:scale-105"
                 />
@@ -145,7 +128,7 @@ export function Gallery() {
                   {item.category}
                 </span>
                 <p className="mt-1.5 text-sm font-medium text-white drop-shadow-sm">
-                  {item.alt}
+                  {item.title}
                 </p>
               </div>
 
@@ -191,9 +174,9 @@ export function Gallery() {
                 onTransitionEnd={() => setScale(scale)}
               >
                 <ResponsiveImage
-                  src={selectedItem.src}
-                  srcWebp={selectedItem.srcWebp}
-                  alt={selectedItem.alt}
+                  src={selectedItem.image.src}
+                  srcWebp={selectedItem.image.srcWebp}
+                  alt={selectedItem.title}
                   wrapperClassName="h-full w-full"
                   className="w-full object-contain"
                 />
@@ -204,7 +187,7 @@ export function Gallery() {
                     {selectedItem.category}
                   </span>
                   <p className="mt-2 text-base font-medium text-[#111827]">
-                    {selectedItem.alt}
+                    {selectedItem.title}
                   </p>
                 </div>
               </div>

@@ -3,7 +3,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Container } from "../layout/Container";
-import { testimonials } from "../../data/testimonials";
+import { useContent } from "../../content/provider";
 import { cn } from "../../utils/cn";
 
 const avatarGradients = [
@@ -14,6 +14,7 @@ const avatarGradients = [
 ];
 
 export function Testimonials() {
+  const { testimonials } = useContent();
   const [progress, setProgress] = useState(0);
   const progressStartRef = useRef(Date.now());
   const rafRef = useRef<number>(0);
@@ -80,16 +81,24 @@ export function Testimonials() {
             <div className="flex">
               {testimonials.map((t, i) => (
                 <div
-                  key={i}
+                  key={t.id}
                   className="min-w-0 flex-[0_0_100%] px-3 sm:flex-[0_0_50%] lg:flex-[0_0_33.33%]"
                 >
                   <div className="flex h-full flex-col rounded-2xl border border-[#F3F4F6] bg-white p-7 shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
                     <div className="mb-5 flex items-center gap-4">
                       <div
-                        style={{ backgroundImage: avatarGradients[i] }}
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+                        style={{ backgroundImage: avatarGradients[i % avatarGradients.length] }}
+                        className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full text-sm font-bold text-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
                       >
-                        {t.name.charAt(0)}
+                        {t.photoUrl ? (
+                          <img
+                            src={t.photoUrl}
+                            alt={t.name}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          t.name.charAt(0)
+                        )}
                       </div>
                       <div>
                         <p className="font-semibold text-[#111827]">

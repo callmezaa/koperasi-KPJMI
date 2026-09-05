@@ -1,3 +1,7 @@
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
+import { ContentProvider } from "./content/provider";
 import { Navbar } from "./components/layout/Navbar";
 import { ScrollProgress } from "./components/layout/ScrollProgress";
 import { BackToTop } from "./components/layout/BackToTop";
@@ -13,28 +17,44 @@ import { FAQ } from "./components/sections/FAQ";
 import { Contact } from "./components/sections/Contact";
 import { Footer } from "./components/layout/Footer";
 
-function App() {
+const AdminApp = lazy(() => import("./admin/AdminApp"));
+
+function PublicSite() {
   return (
-    <main>
-      <ScrollProgress />
-      <Navbar />
-      <BackToTop />
-      <Hero />
-      <About />
-      <VisionMission />
-      <BusinessUnits />
-      <Products />
-      <SectionDivider variant="curve" from="white" />
-      <Gallery />
-      <Testimonials />
-      <SectionDivider variant="leaf" from="#FAFAFA" />
-      <FAQ />
-      <SectionDivider variant="curve" from="white" />
-      <Contact />
-      <SectionDivider variant="wave" from="#FAFAFA" />
-      <Footer />
-    </main>
+    <ContentProvider>
+      <main>
+        <ScrollProgress />
+        <Navbar />
+        <BackToTop />
+        <Hero />
+        <About />
+        <VisionMission />
+        <BusinessUnits />
+        <Products />
+        <SectionDivider variant="curve" from="white" />
+        <Gallery />
+        <Testimonials />
+        <SectionDivider variant="leaf" from="#FAFAFA" />
+        <FAQ />
+        <SectionDivider variant="curve" from="white" />
+        <Contact />
+        <SectionDivider variant="wave" from="#FAFAFA" />
+        <Footer />
+      </main>
+    </ContentProvider>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/admin/*" element={<AdminApp />} />
+          <Route path="*" element={<PublicSite />} />
+        </Routes>
+      </Suspense>
+      <Analytics />
+    </BrowserRouter>
+  );
+}

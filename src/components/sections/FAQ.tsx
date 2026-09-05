@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown } from "lucide-react";
 import { Container } from "../layout/Container";
-import { faqData } from "../../data/faq";
+import { useContent } from "../../content/provider";
 
 function AccordionItem({
   question,
@@ -62,6 +62,7 @@ function AccordionItem({
 }
 
 export function FAQ() {
+  const { faqs } = useContent();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -79,9 +80,9 @@ export function FAQ() {
           </p>
         </div>
         <div className="mx-auto max-w-3xl">
-          {faqData.map((item, i) => (
+          {faqs.map((item, i) => (
             <AccordionItem
-              key={i}
+              key={item.id}
               index={i}
               question={item.question}
               answer={item.answer}

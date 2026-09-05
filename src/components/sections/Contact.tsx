@@ -1,16 +1,18 @@
 import { motion } from "motion/react";
 import { MapPin, Phone, Mail, Clock, Map, MessageCircle } from "lucide-react";
 import { Container } from "../layout/Container";
-import { contact } from "../../data/contact";
-
-const contactDetails = [
-  { icon: MapPin, label: "Alamat", value: contact.address },
-  { icon: Phone, label: "Telepon", value: contact.phone },
-  { icon: Mail, label: "Email", value: contact.email },
-  { icon: Clock, label: "Jam Operasional", value: contact.hours },
-];
+import { useContent } from "../../content/provider";
 
 export function Contact() {
+  const { contact } = useContent();
+
+  const contactDetails = [
+    { icon: MapPin, label: "Alamat", value: contact.address },
+    { icon: Phone, label: "Telepon", value: contact.phone },
+    { icon: Mail, label: "Email", value: contact.email },
+    { icon: Clock, label: "Jam Operasional", value: contact.hours },
+  ];
+
   return (
     <section id="contact" className="bg-[#FAFAFA] py-24 sm:py-32">
       <Container>

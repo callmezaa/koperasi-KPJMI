@@ -10,6 +10,7 @@ Corporate website for **KPJMI (Koperasi Petani Jaya Makmur Indonesia)**, a coope
 - **Animation:** Motion (framer-motion)
 - **Carousel:** Embla Carousel
 - **Icons:** Lucide React
+- **Backend:** Supabase (database, auth, storage) — untuk panel admin
 
 ## Features
 
@@ -24,6 +25,7 @@ Corporate website for **KPJMI (Koperasi Petani Jaya Makmur Indonesia)**, a coope
 - **FAQ** — Smooth accordion with AnimatePresence
 - **Contact** — Live Google Maps embed, WhatsApp integration
 - **Footer** — Dark footer with brand SVG social icons
+- **Admin Dashboard** (`/admin`) — Kelola konten Produk, Galeri, Testimoni, FAQ, dan Info Kontak; perubahan langsung tayang tanpa deploy. Lihat [panduan setup](docs/admin-setup.md).
 
 ## Getting Started
 
@@ -50,13 +52,20 @@ npm run preview
 src/
 ├── assets/           # Images and static assets
 │   └── dokumentasi/  # Gallery documentation photos
+├── admin/            # Admin dashboard (login, CRUD pages, layout)
 ├── components/
 │   ├── layout/       # Navbar, Footer, Container
 │   └── sections/     # Hero, About, VisionMission, Products, Gallery, etc.
-├── data/             # Content data files
+├── content/          # Content layer (provider, defaults, types)
+├── data/             # Static content data files (fase 2 sections)
+├── lib/              # Supabase client
 ├── styles/           # Global CSS (Tailwind v4)
 ├── types/            # TypeScript interfaces
 └── utils/            # Helper utilities (cn)
+supabase/
+└── schema.sql        # DB schema + RLS (jalankan di SQL Editor)
+scripts/
+└── seed-supabase.mjs # Seed awal: upload gambar + isi konten + buat akun admin
 ```
 
 ## Design

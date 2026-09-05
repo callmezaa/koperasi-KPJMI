@@ -4,7 +4,7 @@ import { Skeleton } from "./Skeleton";
 
 interface Props {
   src: string;
-  srcWebp: string;
+  srcWebp?: string | null;
   alt: string;
   className?: string;
   wrapperClassName?: string;
@@ -17,7 +17,7 @@ export function ResponsiveImage({ src, srcWebp, alt, className, wrapperClassName
     <div className={cn("relative overflow-hidden", wrapperClassName)}>
       {!loaded && <Skeleton className="absolute inset-0 h-full w-full" />}
       <picture>
-        <source srcSet={srcWebp} type="image/webp" />
+        {srcWebp ? <source srcSet={srcWebp} type="image/webp" /> : null}
         <img
           src={src}
           alt={alt}

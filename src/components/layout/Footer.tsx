@@ -1,7 +1,7 @@
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Container } from "./Container";
 import { company } from "../../data/company";
-import { contact } from "../../data/contact";
+import { useContent } from "../../content/provider";
 import logoSrc from "../../assets/logo_kpjmi.png";
 import logoSrcWebp from "../../assets/logo_kpjmi.webp";
 
@@ -55,6 +55,8 @@ const socials = [
 ];
 
 export function Footer() {
+  const { contact } = useContent();
+
   return (
     <footer className="bg-[#1A1A1A]">
       <div className="border-t-2 border-brand-red/20" />

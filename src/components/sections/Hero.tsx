@@ -4,7 +4,7 @@ import { Container } from "../layout/Container";
 import { MessageCircle } from "lucide-react";
 import heroBgWebp from "../../assets/hero_section.webp";
 import heroBg from "../../assets/hero_section.png";
-import { contact } from "../../data/contact";
+import { useContent } from "../../content/provider";
 
 const headlineLines = [
   { text: "Koperasi Petani", highlight: false },
@@ -16,6 +16,7 @@ const heroDescription =
   "Kami memproduksi produk pepaya organik. Beberapa produknya antara lain Opak Pepaya, Permen Pepaya, Churros Pepaya, dan Sabun Pepaya. Proses budidaya dilakukan oleh petani lokal dengan konsep pertanian organik dengan mengandalkan input produksi berkelanjutan, serta dalam pengolahan produknya. Kami berada di Desa Kramat, Kembaran, Kab. Banyumas.";
 
 export function Hero() {
+  const { contact } = useContent();
   const heroRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
