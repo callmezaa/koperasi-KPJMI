@@ -3,9 +3,11 @@
 @theme {
   --color-brand-red: #B81104;
   --color-brand-lemon: #FFFACD;
-  --font-family-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-family-mono: "Outfit", ui-monospace, monospace;
-  --font-family-display: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  /* namespace Tailwind v4: --font-* (bukan --font-family-*) agar utility
+     font-sans / font-display benar-benar ter-generate */
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Outfit", ui-monospace, monospace;
+  --font-display: "Satoshi", ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -36,9 +38,29 @@ html {
 }
 
 body {
-  font-family: var(--font-family-sans);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* browser surface — selection, caret, dan autofill ikut palet brand */
+::selection {
+  background: #b81104;
+  color: #fffacd;
+}
+
+input,
+textarea {
+  caret-color: #b81104;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #111827;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  caret-color: #b81104;
+  transition: background-color 9999s ease-out;
 }
 
 @keyframes ripple {
