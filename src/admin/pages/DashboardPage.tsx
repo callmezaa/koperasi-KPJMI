@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import {
+  ArrowUpRight,
   BarChart3,
   CircleHelp,
   Database,
@@ -10,44 +11,20 @@ import {
   MessageSquareQuote,
   Package,
 } from "lucide-react";
-import { PageHeader, Spinner } from "../components/ui";
+import { PageHeader } from "../components/ui";
 import { countRows } from "../api";
 import { isSupabaseConfigured } from "../../lib/supabase";
-
-const supabaseHost = (import.meta.env.VITE_SUPABASE_URL as string | undefined)
-  ? new URL(import.meta.env.VITE_SUPABASE_URL as string).host
-  : null;
+import { cn } from "../../utils/cn";
 
 const cards = [
-  {
-    label: "Produk",
-    table: "products",
-    to: "/admin/produk",
-    icon: Package,
-    accent: "bg-brand-red/10 text-brand-red",
-  },
-  {
-    label: "Foto Galeri",
-    table: "gallery_items",
-    to: "/admin/galeri",
-    icon: Images,
-    accent: "bg-amber-50 text-amber-600",
-  },
-  {
-    label: "Testimoni",
-    table: "testimonials",
-    to: "/admin/testimoni",
-    icon: MessageSquareQuote,
-    accent: "bg-emerald-50 text-emerald-600",
-  },
-  {
-    label: "Pertanyaan FAQ",
-    table: "faqs",
-    to: "/admin/faq",
-    icon: CircleHelp,
-    accent: "bg-blue-50 text-blue-600",
-  },
+  { label: "Produk", table: "products", to: "/admin/produk", icon: Package },
+  { label: "Foto Galeri", table: "gallery_items", to: "/admin/galeri", icon: Images },
+  { label: "Testimoni", table: "testimonials", to: "/admin/testimoni", icon: MessageSquareQuote },
+  { label: "Pertanyaan FAQ", table: "faqs", to: "/admin/faq", icon: CircleHelp },
 ] as const;
+
+const cardClass =
+  "rounded-2xl border border-black/[0.08] bg-white transition-all duration-150 hover:border-black/[0.14] hover:shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.03)]";
 
 export default function DashboardPage() {
   const [counts, setCounts] = useState<Record<string, number> | null>(null);
@@ -62,12 +39,17 @@ export default function DashboardPage() {
         if (!cancelled) setCounts(Object.fromEntries(entries));
       })
       .catch((err) => {
-        if (!cancelled) toast.error(err instanceof Error ? err.message : "Gagal memuat statistik.");
+        if (!cancelled)
+          toast.error(err instanceof Error ? err.message : "Gagal memuat statistik.");
       });
     return () => {
       cancelled = true;
     };
   }, []);
+
+  const supabaseHost = (import.meta.env.VITE_SUPABASE_URL as string | undefined)
+    ? new URL(import.meta.env.VITE_SUPABASE_URL as string).host
+    : null;
 
   return (
     <div>
@@ -76,64 +58,81 @@ export default function DashboardPage() {
         description="Ringkasan konten website dan tautan monitoring."
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {cards.map(({ label, table, to, icon: Icon, accent }) => (
+      {/* ringkasan konten */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {cards.map(({ label, table, to, icon: Icon }) => (
           <Link
             key={table}
             to={to}
-            className="group flex items-center gap-4 rounded-2xl border border-[#F3F4F6] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
+            className={cn("group", cardClass)}
           >
-            <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${accent}`}>
-              <Icon className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="font-display text-2xl font-bold text-[#111827]">
-                {counts ? counts[table] : "—"}
-              </p>
-              <p className="text-sm text-[#6B7280]">{label}</p>
+            <div className="flex items-center gap-3.5 p-5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-black/[0.04] text-[#525252]">
+                <Icon className="h-[18px] w-[18px]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                {counts ? (
+                  <p className="font-display text-2xl font-bold leading-none tracking-tight text-[#262626] [font-feature-settings:'tnum']">
+                    {counts[table]}
+                  </p>
+                ) : (
+                  <div className="h-6 w-10 animate-pulse rounded-md bg-black/[0.06]" />
+                )}
+                <p className="mt-1.5 text-sm text-[#686868]">{label}</p>
+              </div>
+              <ArrowUpRight className="h-4 w-4 shrink-0 self-start text-[#D4D4D4] transition-colors duration-150 group-hover:text-[#262626]" />
             </div>
           </Link>
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      {/* monitoring */}
+      <h2 className="mb-4 mt-10 font-display text-lg font-bold tracking-tight text-[#262626]">
+        Monitoring
+      </h2>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <a
           href="https://vercel.com/dashboard"
           target="_blank"
           rel="noopener noreferrer"
-          className="group rounded-2xl border border-[#F3F4F6] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
+          className={`${cardClass} group block p-6`}
         >
           <div className="flex items-start justify-between">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3F4F6]">
-              <BarChart3 className="h-5 w-5 text-[#111827]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-black/[0.04] text-[#525252]">
+              <BarChart3 className="h-[18px] w-[18px]" />
             </div>
-            <ExternalLink className="h-4 w-4 text-[#D1D5DB] transition-colors group-hover:text-brand-red" />
+            <ExternalLink className="h-4 w-4 text-[#D4D4D4] transition-colors duration-150 group-hover:text-[#262626]" />
           </div>
-          <h3 className="mt-4 font-display font-bold text-[#111827]">Statistik Pengunjung</h3>
-          <p className="mt-1 text-sm leading-relaxed text-[#6B7280]">
+          <h3 className="mt-4 font-display font-bold tracking-tight text-[#262626]">
+            Statistik Pengunjung
+          </h3>
+          <p className="mt-1 text-sm leading-relaxed text-[#686868]">
             Jumlah pengunjung, sumber trafik, dan halaman populer tercatat via Vercel
             Analytics. Buka dashboard Vercel → project koperasi-kpjmi → tab Analytics.
           </p>
         </a>
 
-        <div className="rounded-2xl border border-[#F3F4F6] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3F4F6]">
-            <Database className="h-5 w-5 text-[#111827]" />
-          </div>
-          <h3 className="mt-4 font-display font-bold text-[#111827]">Sumber Data</h3>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-[#6B7280]">
-            <Database className="h-3.5 w-3.5 text-brand-red" />
-            <span className="truncate font-medium text-[#111827]">
-              {supabaseHost ?? "belum terhubung"}
+        <div className={`${cardClass} p-6`}>
+          <div className="flex items-start justify-between">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-black/[0.04] text-[#525252]">
+              <Database className="h-[18px] w-[18px]" />
+            </div>
+            <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              Sinkron otomatis
             </span>
+          </div>
+          <h3 className="mt-4 font-display font-bold tracking-tight text-[#262626]">
+            Sumber Data
+          </h3>
+          <p className="mt-1 truncate text-sm font-medium text-[#262626]">
+            {supabaseHost ?? "belum terhubung"}
           </p>
-          <p className="mt-1 text-sm leading-relaxed text-[#6B7280]">
-            Perubahan di panel ini langsung tampil di website tanpa deploy ulang.
+          <p className="mt-1 text-sm leading-relaxed text-[#686868]">
+            Perubahan di panel ini langsung tayang di website tanpa deploy ulang.
           </p>
         </div>
       </div>
-
-      {counts === null && isSupabaseConfigured && <Spinner className="py-10" />}
     </div>
   );
 }

@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { NavLink, Link, Outlet, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
+  ChevronDown,
+  ChevronRight,
   CircleHelp,
   ExternalLink,
   Images,
@@ -9,11 +11,14 @@ import {
   Menu,
   MessageSquareQuote,
   Package,
+  PanelLeftClose,
+  PanelLeftOpen,
   Phone,
   X,
 } from "lucide-react";
 import { useAdminAuth } from "../auth";
 import logoSrc from "../../assets/logo_kpjmi.png";
+import logoSrcWebp from "../../assets/logo_kpjmi.webp";
 import { cn } from "../../utils/cn";
 
 const navItems = [
@@ -25,114 +30,282 @@ const navItems = [
   { to: "/admin/kontak", label: "Info Kontak", icon: Phone },
 ];
 
-export default function AdminLayout() {
-  const { user, signOut } = useAdminAuth();
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
+const COLLAPSE_KEY = "kpjmi:admin-sidebar-collapsed";
 
-  async function handleSignOut() {
-    await signOut();
-    navigate("/admin/login", { replace: true });
-  }
+function Logo({ className }: { className?: string }) {
+  return (
+    <picture>
+      <source srcSet={logoSrcWebp} type="image/webp" />
+      <img src={logoSrc} alt="Logo KPJMI" className={className} />
+    </picture>
+  );
+}
 
-  const sidebar = (
-    <div className="flex h-full flex-col bg-[#141414]">
-      <div className="flex items-center gap-3 px-6 py-5">
-        <img src={logoSrc} alt="KPJMI" className="h-9 w-auto" />
-        <div>
-          <p className="font-display text-base font-bold leading-tight text-white">KPJMI</p>
-          <p className="text-[11px] uppercase tracking-wider text-[#9CA3AF]">Panel Admin</p>
-        </div>
+function SidebarContent({
+  collapsed,
+  onNavigate,
+}: {
+  collapsed?: boolean;
+  onNavigate?: () => void;
+}) {
+  return (
+    <div className="flex h-full flex-col overflow-hidden border-r border-black/[0.06] bg-[#FAFAFA]">
+      {/* brand */}
+      <div
+        className={cn(
+          "flex h-16 shrink-0 items-center border-b border-black/[0.06]",
+          collapsed ? "justify-center" : "px-4",
+        )}
+      >
+        {collapsed ? (
+          <Logo className="h-8 w-auto" />
+        ) : (
+          <div className="flex items-center gap-2.5">
+            <Logo className="h-8 w-auto" />
+            <div className="min-w-0">
+              <p className="font-display text-sm font-bold leading-tight tracking-tight text-[#262626]">
+                KPJMI
+              </p>
+              <p className="text-[10px] uppercase tracking-[0.14em] text-[#A3A3A3]">
+                Panel Admin
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
-      <nav className="mt-2 flex-1 space-y-1 px-3">
+      {/* navigasi */}
+      <nav className="flex-1 space-y-0.5 overflow-y-auto overflow-x-hidden p-2">
         {navItems.map(({ to, end, label, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
             end={end}
-            onClick={() => setMenuOpen(false)}
+            onClick={onNavigate}
+            aria-label={label}
+            title={collapsed ? label : undefined}
             className={({ isActive }) =>
               cn(
-                "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-2.5 rounded-lg text-sm font-medium transition-colors duration-150",
+                collapsed ? "h-10 justify-center px-0" : "px-2.5 py-2",
                 isActive
-                  ? "bg-brand-red text-white shadow-sm shadow-brand-red/30"
-                  : "text-[#9CA3AF] hover:bg-white/5 hover:text-white",
+                  ? "bg-white text-[#262626] shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06]"
+                  : "text-[#686868] hover:bg-black/[0.04] hover:text-[#262626]",
               )
             }
           >
-            <Icon className="h-4.5 w-4.5" />
-            {label}
+            <Icon className="h-[18px] w-[18px] shrink-0" />
+            <span
+              className={cn(
+                "overflow-hidden whitespace-nowrap transition-all duration-150",
+                collapsed ? "max-w-0 opacity-0" : "max-w-[140px] opacity-100",
+              )}
+            >
+              {label}
+            </span>
           </NavLink>
         ))}
       </nav>
 
-      <div className="border-t border-white/10 p-4">
+      {/* footer */}
+      <div className="border-t border-black/[0.06] p-2">
         <Link
           to="/"
-          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-[#9CA3AF] transition-colors hover:bg-white/5 hover:text-white"
+          title={collapsed ? "Lihat Website" : undefined}
+          className={cn(
+            "flex items-center gap-2.5 rounded-lg text-sm font-medium text-[#686868] transition-colors duration-150 hover:bg-black/[0.04] hover:text-[#262626]",
+            collapsed ? "h-10 justify-center px-0" : "px-2.5 py-2",
+          )}
         >
-          <ExternalLink className="h-4 w-4" />
-          Lihat Website
-        </Link>
-        <div className="mt-2 flex items-center gap-2.5 rounded-xl px-3 py-2">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-red text-xs font-bold text-white">
-            {(user?.email ?? "?").charAt(0).toUpperCase()}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-medium text-white">{user?.email}</p>
-          </div>
-          <button
-            onClick={handleSignOut}
-            aria-label="Keluar"
-            title="Keluar"
-            className="rounded-lg p-1.5 text-[#9CA3AF] transition-colors hover:bg-white/5 hover:text-white"
+          <ExternalLink className="h-[18px] w-[18px] shrink-0" />
+          <span
+            className={cn(
+              "overflow-hidden whitespace-nowrap transition-all duration-150",
+              collapsed ? "max-w-0 opacity-0" : "max-w-[140px] opacity-100",
+            )}
           >
-            <LogOut className="h-4 w-4" />
-          </button>
-        </div>
+            Lihat Website
+          </span>
+        </Link>
       </div>
     </div>
   );
+}
+
+function UserMenu() {
+  const { user, signOut } = useAdminAuth();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  async function handleSignOut() {
+    setOpen(false);
+    await signOut();
+    navigate("/admin/login", { replace: true });
+  }
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      {/* Sidebar desktop */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 lg:block">{sidebar}</aside>
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label="Menu akun"
+        className="flex items-center gap-1 rounded-full p-0.5 transition-colors duration-150 hover:bg-black/[0.04]"
+      >
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#262626] text-xs font-semibold text-white">
+          {(user?.email ?? "?").charAt(0).toUpperCase()}
+        </span>
+        <ChevronDown
+          className={cn(
+            "h-3.5 w-3.5 text-[#A3A3A3] transition-transform duration-150",
+            open && "rotate-180",
+          )}
+        />
+      </button>
 
-      {/* Topbar + drawer mobile */}
-      <div className="sticky top-0 z-40 flex items-center gap-3 bg-[#141414] px-4 py-3 lg:hidden">
-        <button
-          onClick={() => setMenuOpen(true)}
-          aria-label="Buka menu"
-          className="rounded-lg p-2 text-[#9CA3AF] hover:bg-white/5 hover:text-white"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <img src={logoSrc} alt="KPJMI" className="h-7 w-auto" />
-        <span className="font-display text-sm font-bold text-white">Panel Admin</span>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div
+            role="menu"
+            className="absolute right-0 top-[calc(100%+8px)] z-50 w-56 rounded-xl border border-black/[0.06] bg-white p-1 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.16)]"
+          >
+            <div className="px-3 py-2">
+              <p className="text-[11px] uppercase tracking-wider text-[#A3A3A3]">
+                Masuk sebagai
+              </p>
+              <p className="mt-0.5 truncate text-sm font-medium text-[#262626]">
+                {user?.email}
+              </p>
+            </div>
+            <button
+              role="menuitem"
+              onClick={handleSignOut}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-[#262626] transition-colors duration-150 hover:bg-black/[0.04]"
+            >
+              <LogOut className="h-4 w-4 text-[#686868]" />
+              Keluar
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default function AdminLayout() {
+  const { pathname } = useLocation();
+  const [collapsed, setCollapsed] = useState(
+    () => localStorage.getItem(COLLAPSE_KEY) === "1",
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
+  const current = navItems.find((i) =>
+    i.end ? pathname === "/admin" : pathname.startsWith(i.to),
+  );
+
+  function toggleCollapse() {
+    setCollapsed((v) => {
+      localStorage.setItem(COLLAPSE_KEY, v ? "0" : "1");
+      return !v;
+    });
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* sidebar desktop */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 hidden transition-[width] duration-200 ease-out lg:block",
+          collapsed ? "w-[68px]" : "w-60",
+        )}
+      >
+        <SidebarContent collapsed={collapsed} />
+      </aside>
+
+      {/* navbar atas */}
+      <div
+        className={cn(
+          "transition-[padding] duration-200 ease-out",
+          collapsed ? "lg:pl-[68px]" : "lg:pl-60",
+        )}
+      >
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-1.5 border-b border-black/[0.06] bg-white/80 px-3 backdrop-blur-xl sm:px-5 lg:px-6">
+          <button
+            onClick={() => setMenuOpen(true)}
+            aria-label="Buka menu"
+            className="rounded-lg p-2 text-[#686868] transition-colors duration-150 hover:bg-black/[0.04] hover:text-[#262626] lg:hidden"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+
+          <button
+            onClick={toggleCollapse}
+            aria-label={collapsed ? "Perlebar sidebar" : "Persempit sidebar"}
+            className="hidden rounded-lg p-2 text-[#686868] transition-colors duration-150 hover:bg-black/[0.04] hover:text-[#262626] lg:block"
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="h-5 w-5" />
+            ) : (
+              <PanelLeftClose className="h-5 w-5" />
+            )}
+          </button>
+
+          <Logo className="h-7 w-auto lg:hidden" />
+
+          <nav
+            aria-label="Lokasi halaman"
+            className="hidden items-center gap-1.5 lg:flex"
+          >
+            <span className="text-sm text-[#A3A3A3]">Admin</span>
+            <ChevronRight className="h-3.5 w-3.5 text-[#D4D4D4]" />
+            <span className="text-sm font-medium text-[#262626]">
+              {current?.label ?? "Dashboard"}
+            </span>
+          </nav>
+
+          <div className="ml-auto flex items-center gap-1">
+            <Link
+              to="/"
+              className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[#686868] transition-colors duration-150 hover:bg-black/[0.04] hover:text-[#262626] sm:flex"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Lihat Website
+            </Link>
+            <UserMenu />
+          </div>
+        </header>
+
+        <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+          <Outlet />
+        </main>
       </div>
+
+      {/* drawer mobile */}
       {menuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden" onClick={() => setMenuOpen(false)}>
-          <div className="absolute inset-0 bg-black/50" />
-          <div className="absolute inset-y-0 left-0 w-64" onClick={(e) => e.stopPropagation()}>
-            {sidebar}
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+          <div
+            className="absolute inset-y-0 left-0 w-60"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <SidebarContent onNavigate={() => setMenuOpen(false)} />
             <button
               onClick={() => setMenuOpen(false)}
               aria-label="Tutup menu"
-              className="absolute -right-10 top-3 rounded-lg p-2 text-white"
+              className="absolute -right-10 top-3 rounded-lg p-2 text-white/90 transition-colors hover:bg-white/10 hover:text-white"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
         </div>
       )}
-
-      <div className="lg:pl-64">
-        <main className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-          <Outlet />
-        </main>
-      </div>
     </div>
   );
 }
